@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    
+    int numero;
+    int quadrato;
+    int cubo;
+    
+    
+    cout<<"metti un numeroooooo"<<endl;
+    cin>>numero;
+    
+    quadrato= numero* numero;
+    cubo= numero*numero*numero;
+    
+    cout<<"il quadrato e' "<<quadrato<<endl;
+    cout<<"mentre il cubo e' "<<cubo<<endl;
+    
+    
+}
