@@ -1,0 +1,16 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+    int prezzo;
+    cout<<"inserisci il prezzo";
+    cin>>prezzo;
+    int percentuale;
+    cout<<"inserisci la percentuale di sconto ";
+    cin>>percentuale;
+    int sconto=prezzo/100*percentuale;
+    int prezzoScontato=prezzo-sconto;
+    cout<<"lo sconto e' di "<<sconto<<endl;
+    cout<<"il prezzo scontato e' di "<<prezzoScontato;
+}
