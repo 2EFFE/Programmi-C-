@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+
+int a,b,c;
+int somma=a+b;
+
+cout<<"inserire i 3 lati per la creazione di un triangolo"<<endl;
+cout<<"la somma di 2 lati deve essere piu' grande di un singolo lato"<<endl;
+cin>>a;
+cin>>b;
+cin>>c;
+
+if(a<b+c)
+{
+    if(b<+a+c)
+    {
+     if(c<+a+b)
+     {
+          cout<<"hai fatto il triangolo";
+     }else{cout<<"impossibile";}
+     
+    }else{cout<<"impossibile";}
+}else{cout<<"impossibile";}
+
+}
