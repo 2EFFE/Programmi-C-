@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    char c;
+    cout<<"inserisci un carattere ";
+    cin>>c;
+    bool vocale=false;
+    if(c=='a'){vocale=true;}
+    if(c=='e'){vocale=true;}
+    if(c=='i'){vocale=true;}
+    if(c=='o'){vocale=true;}
+    if(c=='u'){vocale=true;}
+    if(c=='A'){vocale=true;}
+    if(c=='E'){vocale=true;}
+    if(c=='I'){vocale=true;}
+    if(c=='O'){vocale=true;}
+    if(c=='U'){vocale=true;}
+    
+    if(vocale)
+    {
+        cout<<"e' stata inserita una vocale";
+    }
+    else
+    {
+        cout<<"NON e' stata inserita una vocale";
+    }
+}
