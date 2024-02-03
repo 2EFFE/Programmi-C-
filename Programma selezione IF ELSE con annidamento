@@ -1,0 +1,38 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+
+int eta;
+int data;
+
+cout<<"La prima volta che l’uomo è andato sulla Luna è stato nel 1969"<<endl;
+cout<<"inserisci la tua eta'"<<endl;
+cin>>eta;
+
+if(eta==55)
+{
+    cout<<"sei nato nello stesso anno in cui l'uomo e' andato sulla luna"<<endl;
+    
+    
+}else{
+    
+     if(eta!=55)
+    {
+        cout<<"non sei nato nell'anno in cui l'uomo è sbarcato sulla terra"<<endl;
+        cout<<"se vuoi sapere la differenza di anni, inserisci la tua data di nascita"<<endl;
+        cin>>data;
+        
+        if(data>1969)
+        {
+            cout<<"sei nato "<<data-1969<< " anni dopo";
+            
+            
+           
+        }else {
+                cout<<"sei nato "<<1969-data<< " anni prima";
+            }
+        
+    }
+}
