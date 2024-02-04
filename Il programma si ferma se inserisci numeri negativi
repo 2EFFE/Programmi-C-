@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+//Il programma si ferma se inserisci numeri negativi
+int main()
+{
+
+
+int pos;
+int neg;
+
+cout<<"inserisci dei numeri positivi, il programma si ferma con uno negativo"<<endl;
+while(pos>=neg)
+{
+    cin>>pos;
+     if(pos>=neg)
+     {
+     cout<<"vai"<<endl;
+     }
+    
+     else
+     {
+        cout<<"basta";
+        
+     }
+    
+    
+}
+
+
+}
