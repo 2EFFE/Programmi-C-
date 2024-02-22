@@ -1,0 +1,21 @@
+Leggere un array di 5 numeri naturali e poi calcolarne la somma e la media.
+
+*******************************************************************************/
+#include <iostream>
+using namespace std;
+int main()
+{
+    int a[5];
+    for (int i=0;i<5;i++)
+    {
+        cin>>a[i];
+    }
+    int somma=0;
+    for (int i=0;i<5;i++)
+    {
+        somma=somma+a[i];
+        a[i]=0;
+    }
+    cout<<"somma "<<somma<<endl;
+    cout<<"media "<<float(somma)/5;
+}
