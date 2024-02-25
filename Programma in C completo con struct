@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define maxHotel 50
+#define maxNome 50
+
+//STRUTTURA HOTEL
+struct Hotel {
+    
+    char nome [maxHotel];
+    float prezzo;
+    int stelle;
+    float distanza;
+    
+};
+
+//DICHIARAZIONI
+void stampaHotel(struct Hotel hotel) {
+    printf("%s - Stelle: %d, Prezzo: %.2f $, Distanza: %.1f km\n", hotel.nome, hotel.stelle, hotel.prezzo, hotel.distanza);
+}
+
+bool conforme (struct Hotel hotel, int stelle, float prezzo_massimo, float distanza_massima){
+    return hotel.stelle >= stelle && hotel.prezzo <= prezzo_massimo && hotel.distanza <= distanza_massima;
+}
+
+//MAIN PRINCIPALE
+int main () {
+    
+    struct Hotel lista[maxHotel] = {
+        
+    {"hotel cazzo", 5.0, 1, 3.0},
+    {"hotel peppaPig", 3.0, 2, 5.3},
+    {"hotel afessemammt", 4.0, 5, 10.5}
+        
+    };
+    
+    int numeroHotel = 3;
+    
+    while (true) {
+        
+        printf("questi sono gli hotel:\n");
+        
+        for(int i=0; i<numeroHotel; i++){
+           
+            printf("%d. ", i+ 1);
+            stampaHotel(lista[i]);
+           
+        }
+        
+        int stelle;
+        float prezzo_massimo, distanza_massima;
+        printf("\nInserisci il numero di stelle desiderate: ");
+        scanf("%d", &stelle);
+        printf("Inserisci il prezzo massimo desiderato: ");
+        scanf("%f", &prezzo_massimo);
+        printf("Inserisci la distanza massima desiderata: ");
+        scanf("%f", &distanza_massima);
+        
+        bool eccolo = false;
+        printf("gli hotel uguali sono: \n");
+        for(int i=0; i<numeroHotel; i++){
+            
+            if(conforme (lista[i], stelle, prezzo_massimo, distanza_massima)){
+               
+               printf("%d. ", i + 1);
+               stampaHotel(lista[i]);
+                eccolo = true;
+               }
+            }
+             if (!eccolo) {
+            printf("Nessun hotel presente con le caratteristiche richieste.\n");
+        }
+        }
+        
+       
+    
+    return 0;
+}
