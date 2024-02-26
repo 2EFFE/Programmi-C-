@@ -29,9 +29,9 @@ int main () {
     
     struct Hotel lista[maxHotel] = {
         
-    {"hotel cazzo", 5.0, 1, 3.0},
-    {"hotel peppaPig", 3.0, 2, 5.3},
-    {"hotel afessemammt", 4.0, 5, 10.5}
+    {"hotel grande mare", 5.0, 1, 3.0},
+    {"hotel europa", 3.0, 2, 5.3},
+    {"hotel viaggio", 4.0, 5, 10.5}
         
     };
     
