@@ -1,0 +1,157 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define MAX_APPOINTMENTS 50
+#define MAX_DESCRIPTION_LENGTH 80
+
+// Definizione del record "orario"
+typedef struct {
+    unsigned int ora;
+    unsigned int minuti;
+} Orario;
+
+// Definizione del record "appuntamento"
+typedef struct {
+    char descrizione[MAX_DESCRIPTION_LENGTH];
+    Orario orario;
+} Appuntamento;
+
+// Prototipi delle funzioni
+void stampa_appuntamento(int posizione, Appuntamento appuntamento);
+bool confronta_orari(Orario orario1, Orario orario2);
+bool orario_successivo_o_uguale(Orario orario_appuntamento, Orario orario_richiesto);
+void rimuovi_appuntamento(int posizione, Appuntamento lista_appuntamenti[], int *num_appuntamenti);
+void inserisci_appuntamento_ordinato(Appuntamento nuovo_appuntamento, Appuntamento lista_appuntamenti[], int *num_appuntamenti);
+bool lista_ordinata(Appuntamento lista_appuntamenti[], int num_appuntamenti);
+
+int main() {
+    // Inizializzazione degli appuntamenti
+    Appuntamento lista_appuntamenti[MAX_APPOINTMENTS] = {
+        { "Colazione da T. Iffany", {7, 30} },
+        { "Partita di Paddle", {10, 30}},
+        { "Riunione Associazione Amanti del Trap Classico", {16, 45}},
+        { "Telefonare a Totore per quel fatto", {19, 00}}
+    };
+    int num_appuntamenti = 4;
+
+    // Ciclo principale del programma
+    while (true) {
+        // Stampa la lista degli appuntamenti
+        printf("Lista degli appuntamenti:\n");
+        for (int i = 0; i < num_appuntamenti; i++) {
+            stampa_appuntamento(i, lista_appuntamenti[i]);
+        }
+
+        // Richiede un orario all'utente
+        printf("\nInserisci un orario (hh:mm): ");
+        Orario orario_richiesto;
+        scanf("%u:%u", &orario_richiesto.ora, &orario_richiesto.minuti);
+
+        // Cerca gli appuntamenti successivi o uguali all'orario indicato
+        bool trovato = false;
+        for (int i = 0; i < num_appuntamenti; i++) {
+            if (orario_successivo_o_uguale(lista_appuntamenti[i].orario, orario_richiesto)) {
+                trovato = true;
+                printf("\n%d:\t", i);
+                stampa_appuntamento(i, lista_appuntamenti[i]);
+            }
+        }
+
+        // Se non ci sono appuntamenti, stampa un messaggio
+        if (!trovato) {
+            printf("\nNessun appuntamento previsto da quell'orario in poi.\n");
+        }
+
+        // Chiede all'utente se vuole eliminare un appuntamento
+        printf("\nVuoi eliminare un appuntamento? (0 per No, posizione dell'appuntamento da eliminare): ");
+        int scelta;
+        scanf("%d", &scelta);
+
+        // Se l'utente ha scelto un'appuntamento da eliminare, lo rimuove
+        if (scelta != 0) {
+            rimuovi_appuntamento(scelta, lista_appuntamenti, &num_appuntamenti);
+            printf("Appuntamento eliminato.\n");
+        }
+
+        // Bonus: Chiede all'utente se vuole aggiungere un appuntamento
+        printf("\nVuoi aggiungere un appuntamento? (0 per No, 1 per Sì): ");
+        scanf("%d", &scelta);
+        if (scelta == 1) {
+            // Richiede le informazioni sull'appuntamento da aggiungere
+            Appuntamento nuovo_appuntamento;
+            printf("\nInserisci la descrizione dell'appuntamento: ");
+            getchar(); // Pulisce il buffer
+            fgets(nuovo_appuntamento.descrizione, MAX_DESCRIPTION_LENGTH, stdin);
+            strtok(nuovo_appuntamento.descrizione, "\n"); // Rimuove il newline
+            printf("Inserisci l'orario (hh:mm): ");
+            scanf("%u:%u", &nuovo_appuntamento.orario.ora, &nuovo_appuntamento.orario.minuti);
+            // Inserisce l'appuntamento nella lista mantenendo l'ordine cronologico
+            inserisci_appuntamento_ordinato(nuovo_appuntamento, lista_appuntamenti, &num_appuntamenti);
+            printf("Appuntamento aggiunto.\n");
+        }
+
+        // Bonus: Verifica se la lista degli appuntamenti è ordinata
+        if (lista_ordinata(lista_appuntamenti, num_appuntamenti)) {
+            printf("\nLa lista degli appuntamenti è ordinata.\n");
+        } else {
+            printf("\nLa lista degli appuntamenti non è ordinata.\n");
+        }
+    }
+
+    return 0;
+}
+
+// Funzione per stampare un appuntamento
+void stampa_appuntamento(int posizione, Appuntamento appuntamento) {
+    printf("%d:%02d\t%s\n", appuntamento.orario.ora, appuntamento.orario.minuti, appuntamento.descrizione);
+}
+
+// Funzione per confrontare due orari
+bool confronta_orari(Orario orario1, Orario orario2) {
+    if (orario1.ora == orario2.ora && orario1.minuti == orario2.minuti) {
+        return true;
+    }
+    return false;
+}
+
+// Funzione per verificare se l'orario di un appuntamento è successivo o uguale a quello richiesto
+bool orario_successivo_o_uguale(Orario orario_appuntamento, Orario orario_richiesto) {
+    if (orario_appuntamento.ora > orario_richiesto.ora) {
+        return true;
+    } else if (orario_appuntamento.ora == orario_richiesto.ora && orario_appuntamento.minuti >= orario_richiesto.minuti) {
+        return true;
+    }
+    return false;
+}
+
+// Funzione per rimuovere un appuntamento dalla lista
+void rimuovi_appuntamento(int posizione, Appuntamento lista_appuntamenti[], int *num_appuntamenti) {
+    for (int i = posizione; i < *num_appuntamenti - 1; i++) {
+        lista_appuntamenti[i] = lista_appuntamenti[i + 1];
+    }
+    (*num_appuntamenti)--;
+}
+
+// Funzione per inserire un appuntamento nella lista mantenendo l'ordine cronologico
+void inserisci_appuntamento_ordinato(Appuntamento nuovo_appuntamento, Appuntamento lista_appuntamenti[], int *num_appuntamenti) {
+    int i = 0;
+    while (i < *num_appuntamenti && confronta_orari(nuovo_appuntamento.orario, lista_appuntamenti[i].orario) > 0) {
+        i++;
+    }
+    for (int j = *num_appuntamenti; j > i; j--) {
+        lista_appuntamenti[j] = lista_appuntamenti[j - 1];
+    }
+    lista_appuntamenti[i] = nuovo_appuntamento;
+    (*num_appuntamenti)++;
+}
+
+// Funzione per verificare se la lista degli appuntamenti è ordinata
+bool lista_ordinata(Appuntamento lista_appuntamenti[], int num_appuntamenti) {
+    for (int i = 0; i < num_appuntamenti - 1; i++) {
+        if (confronta_orari(lista_appuntamenti[i].orario, lista_appuntamenti[i + 1].orario) > 0) {
+            return false;
+        }
+    }
+    return true;
+}
