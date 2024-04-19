@@ -1,0 +1,177 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define MAX_STUDENTI 100
+#define MAX_ESAMI 100
+
+// Definizione della struttura dati "esame"
+typedef struct {
+    char matricola_studente[5];
+    char nome_esame[51];
+    int voto;
+    bool lode;
+} Esame;
+
+// Definizione della struttura dati "storico"
+typedef struct {
+    Esame elenco_esami[MAX_ESAMI];
+    int num_esami;
+} Storico;
+
+// Funzione per stampare un esame
+void stampa_esame(Esame esame) {
+    printf("Matricola: %s - Esame: %s - Voto: %d", esame.matricola_studente, esame.nome_esame, esame.voto);
+    if (esame.lode) {
+        printf(" e lode");
+    }
+    printf(".\n");
+}
+
+// Funzione per validare un esame
+bool valida_esame(Esame esame) {
+    if (esame.voto < 18 || esame.voto > 30) {
+        return false;
+    }
+    if (esame.voto == 30 && !esame.lode) {
+        return false;
+    }
+    return true;
+}
+
+// Funzione per stampare gli esami con voto sopra una soglia
+void stampa_voti_sopra_soglia(Storico storico, int soglia) {
+    for (int i = 0; i < storico.num_esami; i++) {
+        if (storico.elenco_esami[i].voto >= soglia) {
+            stampa_esame(storico.elenco_esami[i]);
+        }
+    }
+}
+
+// Funzione per calcolare la media degli esami di uno studente
+float calcola_media_studente(Storico storico, char matricola[]) {
+    int somma_voti = 0;
+    int num_esami = 0;
+    for (int i = 0; i < storico.num_esami; i++) {
+        if (strcmp(storico.elenco_esami[i].matricola_studente, matricola) == 0) {
+            somma_voti += storico.elenco_esami[i].voto;
+            num_esami++;
+        }
+    }
+    if (num_esami == 0) {
+        return 0;
+    }
+    return (float)somma_voti / num_esami;
+}
+
+// Funzione per cancellare i voti di uno studente
+void cancella_voti_studente(Storico *storico, char matricola[]) {
+    int i = 0;
+    while (i < storico->num_esami) {
+        if (strcmp(storico->elenco_esami[i].matricola_studente, matricola) == 0) {
+            for (int j = i; j < storico->num_esami - 1; j++) {
+                storico->elenco_esami[j] = storico->elenco_esami[j + 1];
+            }
+            storico->num_esami--;
+        } else {
+            i++;
+        }
+    }
+}
+
+int main() {
+    // Inizializzazione dello storico degli esami
+    Storico storico = {
+        .elenco_esami = {
+            { "1234", "Fondamenti di Informatica", 25, false},
+            { "1235", "Fondamenti di Informatica", 28, false},
+            { "1236", "Fondamenti di Informatica", 30, true},
+            { "1234", "Analisi I", 18, false},
+            { "1236", "Analisi I", 27, false},
+            { "1235", "Fisica I", 28, false},
+            { "1236", "Fisica I", 26, false}
+        },
+        .num_esami = 7
+    };
+
+    // Menu principale
+    int scelta;
+    do {
+        printf("\nMenu:\n");
+        printf("1. Stampa storico\n");
+        printf("2. Inserisci nuovo esame\n");
+        printf("3. Calcola media\n");
+        printf("4. Stampa voti sopra soglia\n");
+        printf("5. Cancella voti studente\n");
+        printf("0. Esci\n");
+        printf("Scelta: ");
+        scanf("%d", &scelta);
+
+        switch (scelta) {
+            case 1:
+                // Stampa storico
+                printf("\nStorico degli esami:\n");
+                for (int i = 0; i < storico.num_esami; i++) {
+                    stampa_esame(storico.elenco_esami[i]);
+                }
+                break;
+            case 2:
+                // Inserisci nuovo esame
+                printf("\nInserisci i dati del nuovo esame:\n");
+                Esame nuovo_esame;
+                printf("Matricola studente: ");
+                scanf("%s", nuovo_esame.matricola_studente);
+                printf("Nome esame: ");
+                getchar(); // Pulizia del buffer
+                fgets(nuovo_esame.nome_esame, sizeof(nuovo_esame.nome_esame), stdin);
+                strtok(nuovo_esame.nome_esame, "\n"); // Rimozione del newline
+                printf("Voto: ");
+                scanf("%d", &nuovo_esame.voto);
+                printf("Con lode? (1 per sì, 0 per no): ");
+                int scelta_lode;
+                scanf("%d", &scelta_lode);
+                nuovo_esame.lode = (scelta_lode == 1) ? true : false;
+
+                // Validazione dell'esame
+                if (valida_esame(nuovo_esame)) {
+                    storico.elenco_esami[storico.num_esami++] = nuovo_esame;
+                    printf("Esame aggiunto.\n");
+                } else {
+                    printf("Esame non valido. Il voto deve essere compreso tra 18 e 30, o 30 in caso di lode.\n");
+                }
+                break;
+            case 3:
+                // Calcola media
+                char matricola[5];
+                printf("\nInserisci la matricola dello studente di cui calcolare la media: ");
+                scanf("%s", matricola);
+                float media = calcola_media_studente(storico, matricola);
+                printf("La media dello studente %s è %.2f\n", matricola, media);
+                break;
+            case 4:
+                // Stampa voti sopra soglia
+                int soglia;
+                printf("\nInserisci la soglia di voto: ");
+                scanf("%d", &soglia);
+                printf("Esami con voto maggiore o uguale a %d:\n", soglia);
+                stampa_voti_sopra_soglia(storico, soglia);
+                break;
+            case 5:
+                // Cancella voti studente
+                char matricola_cancellazione[5];
+                printf("\nInserisci la matricola dello studente di cui cancellare i voti: ");
+                scanf("%s", matricola_cancellazione);
+                cancella_voti_studente(&storico, matricola_cancellazione);
+                printf("Voti dello studente %s cancellati.\n", matricola_cancellazione);
+                break;
+            case 0:
+                printf("Uscita.\n");
+                break;
+            default:
+                printf("Scelta non valida.\n");
+                break;
+        }
+    } while (scelta != 0);
+
+    return 0;
+}
